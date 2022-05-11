@@ -81,6 +81,7 @@ And that's up! already have a base image of RO we can use for training or test
     $ docker images
 
 REPOSITORY                           TAG             IMAGE ID      CREATED        SIZE
+
 localhost/cro                        8.2.9         05fc28b5ad50  2 minutes ago   4.15 GB
 
 
@@ -153,31 +154,27 @@ There are 4 scripts to execute previous steps in a quick way on a RHEL system wi
        STEP 18/19: EXPOSE 8080/tcp
        --> 306766a64ab
        STEP 19/19: CMD ["mysqld"]
+       47904c383b3378ef2f5855f2f97c628910368d6994b9ad72f782929e4dfc31bf
+       Configurando parametros de RHEL
+       Definiendo propiedades de instalacion
+       Configurando clave de mariadb a Passw0rd
+       mariadbencryption/
+       mariadbencryption/server-key.pem
+       mariadbencryption/keys.txt
+       mariadbencryption/client-key.pem
+       mariadbencryption/server-cert.pem
+       mariadbencryption/startMariaDB_with_Vault.sh
+       mariadbencryption/tablesToBeEncrypted
+       mariadbencryption/ca-cert.pem
+       mariadbencryption/truststore.jks
+       mariadbencryption/client-cert.pem
+       Enter password:
+       
+       **Enter mariadb password (Passw0rd)**
 
-REPOSITORY                           TAG         IMAGE ID      CREATED        SIZE
-localhost/cro                        829         47904c383b33  3 minutes ago  885 MB
+       Instalando Resilency Orchestrator
+       220511 12:34:31 mysqld_safe Logging to '/var/lib/mysql/64359045dc63.err'.
+       220511 12:34:31 mysqld_safe Starting mariadbd daemon with databases from /var/lib/mysql
+       Preparing to install
 
-47904c383b3378ef2f5855f2f97c628910368d6994b9ad72f782929e4dfc31bf
-Configurando parametros de RHEL
-Definiendo propiedades de instalacion
-Configurando clave de mariadb a Passw0rd
-mariadbencryption/
-mariadbencryption/server-key.pem
-mariadbencryption/keys.txt
-mariadbencryption/client-key.pem
-mariadbencryption/server-cert.pem
-mariadbencryption/startMariaDB_with_Vault.sh
-mariadbencryption/tablesToBeEncrypted
-mariadbencryption/ca-cert.pem
-mariadbencryption/truststore.jks
-mariadbencryption/client-cert.pem
-Enter password: 
-
-**Enter mariadb password (Passw0rd)
-
-Instalando Resilency Orchestrator
-220511 12:34:31 mysqld_safe Logging to '/var/lib/mysql/64359045dc63.err'.
-220511 12:34:31 mysqld_safe Starting mariadbd daemon with databases from /var/lib/mysql
-Preparing to install
-
-**Follow RO installation steps
+       **Follow RO installation steps**
