@@ -1,0 +1,39 @@
+FROM registry.access.redhat.com/ubi8/ubi
+# MariaDB image for OpenShift.
+
+ENV HOME=/var/lib/mysql \
+    SUMMARY="MariaDB 10.5.9" \
+    DESCRIPTION="Resilency Orchestration 8.2.9"
+
+LABEL summary="$SUMMARY" \
+      description="$DESCRIPTION" \
+      io.k8s.description="$DESCRIPTION" \
+      io.k8s.display-name="MariaDB 10.5.9" \
+      io.openshift.expose-services="3306:mysql" \
+      io.openshift.tags="database,mysql,mariadb,mariadb105,mariadb-105" \
+      com.redhat.component="mariadb-105-container" \
+      name="mariadb1059" \
+      version="1" \
+      usage="docker run -it --network host -p 3306:3306 -h mdb1059 --name mdb mdb510 bash" \
+      maintainer="Kyndryl Colombia <rvasquez@kyndryl.com>"
+
+# Installation of dependencies
+RUN yum --disableplugin=subscription-manager install -y yum-utils && \
+    INSTALL_PKGS="hostname openssl wget" && \
+    yum --disableplugin=subscription-manager install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
+    rpm -V $INSTALL_PKGS && \
+    yum clean all
+
+# Installation of MariaDB 10.5.9
+RUN wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-shared-10.5.9-1.el8.x86_64.rpm
+RUN wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-common-10.5.9-1.el8.x86_64.rpm
+RUN wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-server-10.5.9-1.el8.x86_64.rpm
+RUN wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-client-10.5.9-1.el8.x86_64.rpm
+RUN wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/galera-4-26.4.7-1.el8.x86_64.rpm
+RUN wget http://repo.okay.com.mx/centos/8/x86_64/release/boost-program-options-1.66.0-6.el8.x86_64.rpm
+RUN yum localinstall -y boost* galera-4* MariaDB-* && rm *.rpm
+
+# MariaDB port and Tomcat port
+EXPOSE 3306
+
+CMD ["mysqld"]

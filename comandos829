@@ -1,0 +1,22 @@
+# Copiar los medios de instalación
+[ -f cro829/Server.tar.gz ] || ln -s /home/rvasquez/DownloadDirector/CRO829/Server.tar.gz -t cro829
+[ -f cro829/gnulib.zip ] || wget -O cro829/gnulib.zip https://sourceforge.net/projects/gnu-utils/files/binaries/gnulib.zip/download 
+[ -f cro829/ThirdPartyJSLib.zip ] || wget -O cro829/ThirdPartyJSLib.zip https://sourceforge.net/projects/gnu-utils/files/binaries/ThirdPartyJSLib.zip/download
+[ -f cro829/my.cnf ] || cp my.cnf cro829
+[ -f cro829/mariadbencryption.tar.gz ] || cp mariadbencryption.tar.gz cro829
+
+# Crear volumen para albergar los medios de instalacion
+podman volume create cro829
+
+# Subir una instancia de ubuntu y copiar los instaladores
+podman run --rm --name base1 --volume cro829:/install registry.access.redhat.com/ubi8/ubi bash -c "tail -f /dev/null" &
+sleep 5
+podman cp cro829/Server.tar.gz base1:/install/
+podman cp cro829/gnulib.zip base1:/install/
+podman cp cro829/ThirdPartyJSLib.zip base1:/install/
+podman exec -i -t base1 /bin/bash -c "cd /install/ ; [ -f install.bin ] || tar xvzf Server.tar.gz; rm Server.tar.gz" && podman stop base1 && podman rm base1
+
+# Preparar los prerequisitos de CRO
+podman build -f Dockerfile.cro829 --tag localhost/cro:829
+podman run --rm -it -v cro829:/install --name crort localhost/cro:829 bash -c /instcro && podman commit crort cro:829
+#podman run --rm -it -v cro829:/install --name crort localhost/cro:829 bash
