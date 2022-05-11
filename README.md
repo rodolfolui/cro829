@@ -178,3 +178,7 @@ There are 4 scripts to execute previous steps in a quick way on a RHEL system wi
        Preparing to install
 
        **Follow RO installation steps**
+
+On 8.2.9 is needed to download a Validation Key from passport advantage. Validation key file value is mandatory for the minor release fresh/upgrade deployments
+
+https://www.ibm.com/software/passportadvantage/pao_customer.html?msclkid=d1d311bec06611ecb044974dd273fc10
