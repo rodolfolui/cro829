@@ -14,6 +14,8 @@ sleep 5
 podman cp cro829/Server.tar.gz base1:/install/
 podman cp cro829/gnulib.zip base1:/install/
 podman cp cro829/ThirdPartyJSLib.zip base1:/install/
+podman cp cro829/my.cnf base1:/install/
+podman cp cro829/mariadbencryption.tar.gz base1:/install/
 podman exec -i -t base1 /bin/bash -c "cd /install/ ; [ -f install.bin ] || tar xvzf Server.tar.gz; rm Server.tar.gz" && podman stop base1 && podman rm base1
 
 # Preparar los prerequisitos de CRO
