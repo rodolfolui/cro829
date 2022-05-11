@@ -156,3 +156,28 @@ There are 4 scripts to execute previous steps in a quick way on a RHEL system wi
 
 REPOSITORY                           TAG         IMAGE ID      CREATED        SIZE
 localhost/cro                        829         47904c383b33  3 minutes ago  885 MB
+
+47904c383b3378ef2f5855f2f97c628910368d6994b9ad72f782929e4dfc31bf
+Configurando parametros de RHEL
+Definiendo propiedades de instalacion
+Configurando clave de mariadb a Passw0rd
+mariadbencryption/
+mariadbencryption/server-key.pem
+mariadbencryption/keys.txt
+mariadbencryption/client-key.pem
+mariadbencryption/server-cert.pem
+mariadbencryption/startMariaDB_with_Vault.sh
+mariadbencryption/tablesToBeEncrypted
+mariadbencryption/ca-cert.pem
+mariadbencryption/truststore.jks
+mariadbencryption/client-cert.pem
+Enter password: 
+
+**Enter mariadb password (Passw0rd)
+
+Instalando Resilency Orchestrator
+220511 12:34:31 mysqld_safe Logging to '/var/lib/mysql/64359045dc63.err'.
+220511 12:34:31 mysqld_safe Starting mariadbd daemon with databases from /var/lib/mysql
+Preparing to install
+
+**Follow RO installation steps
