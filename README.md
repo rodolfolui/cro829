@@ -5,7 +5,7 @@ IBM Resilency Orchestration 8.2.9 container
 
 *Read this in other languages: [English](README.md), [Español](README.es_co.md).*
 
-## Introducción a IBM Resilency Orchestration 8.2.9
+## Introduction to Resilency Orchestration 8.2.9
 
 [![Watch the video](https://higherlogicdownload.s3.amazonaws.com/IMWUC/DeveloperWorksImages_blog-storageneers/ScreenShot2018-10-03at4.32.30PM.png)](https://youtu.be/YRKI2deypuI)
 
@@ -21,29 +21,37 @@ Prepare a Virtual Machine with RHEL 8.x (Linux Red Hat Enterprise) or Ubuntu wit
 
 ### Pre-requisite preparation
 
-    1. Importe y ejecute la imagen base de RHEL 8.4
+    1. Import and run RHEL 8.4 UBI (minimal) base image
         $ docker run -it --name cro -h crort -p 8080:8080 registry.access.redhat.com/ubi8/ubi:8.4 bash
-    2. Instale las librerias
+        
+    2. Install library
        [root@crort /]# dnf -y install hostname libXtst net-tools iputils procps-ng rsync sudo unzip wget
-    3. Descargue el servidor de aplicaciones Tomcat 9.0.37 e instalelo en la ruta /opt
-       [root@crort /]# wget -qO- https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.tar.gz | tar -xzf - -C /opt
-    4. Descargue los rpm's de instalación de la base de datos MariaDB 10.3.27 o del box CRO Server 8.1.2
-       [root@crort /]# wget -qO- https://yum.mariadb.org/10.3/rhel8-amd64/rpms/MariaDB-server-10.3.27-1.el8.x86_64.rpm
-       [root@crort /]# wget -qO- https://yum.mariadb.org/10.3/rhel8-amd64/rpms/MariaDB-client-10.3.27-1.el8.x86_64.rpm
-       [root@crort /]# wget -qO- https://yum.mariadb.org/10.3/rhel8-amd64/rpms/galera-25.3.30-1.el8.x86_64.rpm
-       [root@crort /]# wget -qO- https://yum.mariadb.org/10.3/rhel8-amd64/rpms/MariaDB-common-10.3.27-1.el8.x86_64.rpm
-    5. Descarge el rpm de boost-program-options del box CRO Server 8.1.2
-    6. Instale MariaDB, suba el servicio en el contenedor y cambie la contraseña por defecto
+       
+    3. Download Tomcat 9.0.54 and install on /opt
+       [root@crort /]# wget -qO- https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.54/bin/apache-tomcat-9.0.54.tar.gz | tar -xzf - -C /opt
+       
+    4. Download MariaDB 10.5.9 installation rpm's
+       [root@crort /]# wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-shared-10.5.9-1.el8.x86_64.rpm
+       [root@crort /]# wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-common-10.5.9-1.el8.x86_64.rpm
+       [root@crort /]# wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-server-10.5.9-1.el8.x86_64.rpm
+       [root@crort /]# wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/MariaDB-client-10.5.9-1.el8.x86_64.rpm
+       [root@crort /]# wget https://downloads.mariadb.com/MariaDB/mariadb-10.5.9/yum/rhel8-amd64/rpms/galera-4-26.4.7-1.el8.x86_64.rpm
+
+    5. Download boost-program-options (required for galera)
+       [root@crort /]# wget http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/boost-program-options-1.66.0-10.el8.x86_64.rpm
+
+    6. Install MariaDB, start container and change root password
        [root@crort /]# rpm -Uvh boost-program-options-1.66.0-10.el8.x86_64.rpm
        [root@crort /]# dnf --disableplugin=subscription-manager install -y MariaDB-server galera MariaDB-client MariaDB-shared MariaDB-backup MariaDB-common
        [root@crort /]# /etc/init.d/mysql start
        [root@crort /]# mysqladmin -f -u root password 'Passw0rd'
 
-### Instalacion de Resilency Orchestration
+### Resiliency Orchestration Install
 
-    1. En otra ventana de linux por fuera del contenedor, copie el instalador del producto ubicado en Server.tar.gz dentro del contenedor asi:
+    1. On other linux shell (Outside container), copy product installation binaries (Server.tar.gz) inside the container:
        $ docker copy Server.tar.gz crort:/tmp
-    2. Ejecute la instalación del producto siguiendo los pasos descritos en la guia de instalación de CRO a partir de la página 77 para el modo consola:
+       
+    2. Execute RO installation steps starting on page 77 in console mode:
        [root@crort /]# cd tmp
        [root@crort /]# tar xvzf Server.tar.gz
        [root@crort /]# sed 's/LOCAL_HOST_SERVER=/LOCAL_HOST_SERVER=10.0.0.2/
@@ -56,18 +64,19 @@ Prepare a Virtual Machine with RHEL 8.x (Linux Red Hat Enterprise) or Ubuntu wit
        [root@crort /]# /tmp/install.bin -f /tmp/PanacesServerCro.properties
     3. Ejecute los pasos post instalación descritos en la guia de instalación de CRO a partir de la página 85 (numeral 5.6) para el modo consola
 
-### Inicio de servicios de RO
+### Start RO services
 
-    1. Inicie los servicios de CRO en el contenedor:
+    1. Start RO services in container:
        export EAMSROOT=/opt/panaces
        /etc/init.d/mysql status || /etc/init.d/mysql start
        cd /opt/panaces/bin
        ./panaces restart
-    2. Por último por fuera del contenedor en otra ventana, guarde una imagen del contenedor en ejecución para no perder la instalación (recuerden, los contenedores son por defecto no persistentes)
-       $ docker commit crort cro812:latest
+       
+    2. On other linux shell (Outside container), save running container image to persist installation (containers are not persistent by nature)
+       $ docker commit crort cro:8.2.9
     
-Y listo! ya tenemos una imagen base de cro que podemos usar para nuestras capacitaciones
+And that's up! already have a base image of RO we can use for training or test
     $ docker images
 
 REPOSITORY                           TAG             IMAGE ID      CREATED        SIZE
-localhost/cro812                     latest          05fc28b5ad50  2 months ago   4.15 GB
+localhost/cro                        8.2.9         05fc28b5ad50  2 minutes ago   4.15 GB
