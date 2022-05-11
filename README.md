@@ -15,6 +15,7 @@ IBM Resilency Orchestration 8.2.9 container
 ### Prepare CRO environment with docker/podman
 
 Prepare a Virtual Machine with RHEL 8.x (Linux Red Hat Enterprise) or Ubuntu with Docker
+
     1. On Apple Mac use docker for Mac and command line
     2. On windows use docker for windows and select linux containers enablinbg hyper-v virtualization. It is easier to use VirtualBox and start Ubuntu VM with docker
     3. On RHEL 8.x podman is installed by default and is fully command compatible with docker commands.  For scenarios where need docker-compose you can use podman-compose
